@@ -36,7 +36,8 @@ const sliderData = [
     {
         'thumb':'/images/slide/slider-9.webp',
         'number':9
-    },    {
+    },
+    {
         'thumb':'/images/slide/slider-1.webp',
         'number':10
     },
@@ -44,34 +45,62 @@ const sliderData = [
         'thumb':'/images/slide/slider-2.webp',
         'number':11
     },
-    {
-        'thumb':'/images/slide/slider-3.webp',
-        'number':12
-    },
-    {
-        'thumb':'/images/slide/slider-4.webp',
-        'number':13
-    },
-    {
-        'thumb':'/images/slide/slider-5.webp',
-        'number':14
-    },
-    {
-        'thumb':'/images/slide/slider-6.webp',
-        'number':15
-    },
-    {
-        'thumb':'/images/slide/slider-7.webp',
-        'number':16
-    },
-    {
-        'thumb':'/images/slide/slider-8.webp',
-        'number':17
-    },
-    {
-        'thumb':'/images/slide/slider-9.webp',
-        'number':18
-    }
+    // {
+    //     'thumb':'/images/slide/slider-3.webp',
+    //     'number':12
+    // },
+    // {
+    //     'thumb':'/images/slide/slider-4.webp',
+    //     'number':13
+    // },
+    // {
+    //     'thumb':'/images/slide/slider-5.webp',
+    //     'number':14
+    // },
+    // {
+    //     'thumb':'/images/slide/slider-6.webp',
+    //     'number':15
+    // },
+    // {
+    //     'thumb':'/images/slide/slider-7.webp',
+    //     'number':16
+    // },
+    // {
+    //     'thumb':'/images/slide/slider-8.webp',
+    //     'number':17
+    // },
+    // {
+    //     'thumb':'/images/slide/slider-9.webp',
+    //     'number':18
+    // },
+    // {
+    //     'thumb':'/images/slide/slider-3.webp',
+    //     'number':19
+    // },
+    // {
+    //     'thumb':'/images/slide/slider-4.webp',
+    //     'number':20
+    // },
+    // {
+    //     'thumb':'/images/slide/slider-5.webp',
+    //     'number':21
+    // },
+    // {
+    //     'thumb':'/images/slide/slider-6.webp',
+    //     'number':22
+    // },
+    // {
+    //     'thumb':'/images/slide/slider-7.webp',
+    //     'number':23
+    // },
+    // {
+    //     'thumb':'/images/slide/slider-8.webp',
+    //     'number':24
+    // },
+    // {
+    //     'thumb':'/images/slide/slider-9.webp',
+    //     'number':25
+    // }
 ]
 
 
@@ -113,11 +142,16 @@ for (let index = 0; index < sliderCount; index++) {
 
 function nextSlide(){
     currentPage++
-    let transX = (currentPage * moviesViewportWidth) + (sliderGap*currentPage)
+    let transX = (currentPage * moviesViewportWidth) 
     if (sliderCount - (currentPage * sliderView) < sliderView) {
-        let count = sliderCount - (currentPage * sliderView) 
-        transX = transX - ((sliderView - count) * cardWidth) - (sliderGap*currentPage) + sliderGap
+        let remaninCardCount = sliderCount - (currentPage * sliderView) //3
+        let remaninCardWidth = remaninCardCount*cardWidth
+        let lastPageTranx = (currentPage-1)* moviesViewportWidth
+        transX = remaninCardWidth + (sliderGap*remaninCardCount) +  lastPageTranx +  (sliderGap*(currentPage-1))
         nextBtn.classList.remove('active')
+    } 
+    else {
+        transX = transX + (sliderGap*currentPage)
     }
     moviesViewport.style.transform = `translateX(-${transX}px)`
     if (currentPage > 0) {
@@ -131,10 +165,8 @@ function prevSlide(){
     moviesViewport.style.transform = `translateX(-${transX}px)`
     if (currentPage==0) {
         prevBtn.classList.remove('active')
-    }else {
         nextBtn.classList.add('active')
     }
-    
 }
 
 

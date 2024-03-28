@@ -1,63 +1,143 @@
+
+
+const sliderData = [
+    {
+        'thumb':'/images/slide/slider-1.webp',
+        'number':1
+    },
+    {
+        'thumb':'/images/slide/slider-2.webp',
+        'number':2
+    },
+    {
+        'thumb':'/images/slide/slider-3.webp',
+        'number':3
+    },
+    {
+        'thumb':'/images/slide/slider-4.webp',
+        'number':4
+    },
+    {
+        'thumb':'/images/slide/slider-5.webp',
+        'number':5
+    },
+    {
+        'thumb':'/images/slide/slider-6.webp',
+        'number':6
+    },
+    {
+        'thumb':'/images/slide/slider-7.webp',
+        'number':7
+    },
+    {
+        'thumb':'/images/slide/slider-8.webp',
+        'number':8
+    },
+    {
+        'thumb':'/images/slide/slider-9.webp',
+        'number':9
+    },    {
+        'thumb':'/images/slide/slider-1.webp',
+        'number':10
+    },
+    {
+        'thumb':'/images/slide/slider-2.webp',
+        'number':11
+    },
+    {
+        'thumb':'/images/slide/slider-3.webp',
+        'number':12
+    },
+    {
+        'thumb':'/images/slide/slider-4.webp',
+        'number':13
+    },
+    {
+        'thumb':'/images/slide/slider-5.webp',
+        'number':14
+    },
+    {
+        'thumb':'/images/slide/slider-6.webp',
+        'number':15
+    },
+    {
+        'thumb':'/images/slide/slider-7.webp',
+        'number':16
+    },
+    {
+        'thumb':'/images/slide/slider-8.webp',
+        'number':17
+    },
+    {
+        'thumb':'/images/slide/slider-9.webp',
+        'number':18
+    }
+]
+
+
+const movieSlider = document.querySelector(".movies-slider")
 const nextBtn = document.querySelector(".next-button")
 const prevBtn = document.querySelector(".prev-button")
 const moviesViewport = document.querySelector(".movies-viewport")
-
-let sliderViewCounter = 5
-let sliderGap = 44
-let moviesCardCounter = 9
 let moviesViewportWidth = moviesViewport.offsetWidth
-let sliderCardWidth =  (moviesViewportWidth - (sliderGap*(sliderViewCounter-1))) / sliderViewCounter
-let pageWidth = moviesViewportWidth
-let movieCardWidth = (moviesViewportWidth - ((moviesCardCounter-1)* 44)) / moviesCardCounter
+let sliderView = parseInt(movieSlider.getAttribute('slider-view'))
+let sliderGap = parseInt(movieSlider.getAttribute('slider-gap'))
+let cardWidth = (moviesViewportWidth - (sliderGap*(sliderView-1))) / sliderView
+let sliderCount = sliderData.length
+let sliderPage = sliderData.length/sliderView
+let currentPage = 0
 
-function nextSlide(){
-    let slide = moviesCardCounter - sliderViewCounter 
-    let tranx = (movieCardWidth * slide) + (sliderGap*slide)
-    moviesViewport.style.cssText = `transform: translateX(-${tranx}px)`
-    prevBtn.classList.add('active')
-}
+moviesViewport.style.cssText = `gap: ${sliderGap}px`
+nextBtn.classList.add('active')
 
-function prevSlide(){
-    moviesViewport.style.cssText = `transform: translateX(-0px)`
-    nextBtn.classList.add('active')
-    this.classList.remove('active')
-}
-
-const movieCardTemplate = (number)=>{
+const movieCardTemplate = (data)=>{
     const card = document.createElement("div")
     card.className = "trending-movie-card"
     card.innerHTML = `
-        <div class="thumbnail" style="max-width:${sliderCardWidth}px;width:${sliderCardWidth}px">
-            <img src="./images/slide/slider-${number}.webp" alt="">
+        <div class="thumbnail" style="max-width:${cardWidth}px;width:${cardWidth}px">
+            <img src="${data.thumb}" alt="">
         </div>
-        <div class="rank-number" rank-number="${number}">
-            ${number}
+        <div class="rank-number" rank-number="${data.number}">
+            ${data.number}
         </div>
     `
     return card
 }
 
 
-for (let i = 0 ;i < 9;i++) {
-    const card = movieCardTemplate(number=i+1)
+for (let index = 0; index < sliderCount; index++) {
+    const data = sliderData[index];
+    let card = movieCardTemplate(data)
     moviesViewport.appendChild(card)
 }
 
-// document.addEventListener('DOMContentLoaded',()=>{
-//     let cardWidth = document.querySelector(".movies-viewport").childNodes[1].offsetWidth
-//     console.log(cardWidth)
-//     let viewportWidth = (cardWidth * moviesCardCounter) + (sliderGap * moviesCardCounter) 
-//     console.log(sliderGap * moviesCardCounter)
-//     // moviesViewport.style.width = viewportWidth  +'px'
+function nextSlide(){
+    currentPage++
+    let transX = (currentPage * moviesViewportWidth) + (sliderGap*currentPage)
+    if (sliderCount - (currentPage * sliderView) < sliderView) {
+        let count = sliderCount - (currentPage * sliderView) 
+        transX = transX - ((sliderView - count) * cardWidth) - (sliderGap*currentPage) + sliderGap
+        nextBtn.classList.remove('active')
+    }
+    moviesViewport.style.transform = `translateX(-${transX}px)`
+    if (currentPage > 0) {
+        prevBtn.classList.add('active')
+    }
+}
 
-//     // moviesViewportWidth = moviesViewport.offsetWidth
-//     // movieCardWidth = (moviesViewportWidth - ((moviesCardCounter-1)* 44)) / moviesCardCounter
-// })
+function prevSlide(){
+    currentPage --
+    let transX = (currentPage * moviesViewportWidth) + (sliderGap*currentPage)
+    moviesViewport.style.transform = `translateX(-${transX}px)`
+    if (currentPage==0) {
+        prevBtn.classList.remove('active')
+    }else {
+        nextBtn.classList.add('active')
+    }
+    
+}
 
 
-nextBtn.addEventListener("click",nextSlide)
-prevBtn.addEventListener("click",prevSlide)
-
-
-
+nextBtn.addEventListener('click',nextSlide)
+prevBtn.addEventListener('click',prevSlide)
 
